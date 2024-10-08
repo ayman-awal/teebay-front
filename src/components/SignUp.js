@@ -20,10 +20,7 @@ const SignUp = () => {
                     <TextField id="outlined-basic" label="First Name" variant="outlined" />
                     <TextField id="outlined-basic" label="Last Name" variant="outlined" />
                 </Box>
-                    {/* <div className='flex flex-row justify-center align-center gap-20'>
-                        <TextField id="outlined-basic" label="First Name" variant="outlined" />
-                        <TextField id="outlined-basic" label="Last Name" variant="outlined" />
-                    </div> */}
+                    
                 <Box
                     component="form"
                     sx={{ '& > :not(style)': { m: 1, width: '51ch' } }}
@@ -33,9 +30,7 @@ const SignUp = () => {
                     >
                     <TextField id="outlined-basic" label="Address" variant="outlined" />
                 </Box>
-                    {/* <div className='flex flex-row justify-center align-center gap-20'>
-                        <TextField id="outlined-basic" label="Address" variant="outlined" />
-                    </div> */}
+                    
                 <Box
                     component="form"
                     sx={{ '& > :not(style)': { m: 1, width: '25ch' } }}
@@ -46,10 +41,7 @@ const SignUp = () => {
                     <TextField id="outlined-basic" label="Email" variant="outlined" />
                     <TextField id="outlined-basic" label="Phone Number" variant="outlined" />
                 </Box>
-                    {/* <div className='flex flex-row justify-center align-center gap-20'>
-                        <TextField id="outlined-basic" label="Email" variant="outlined" />
-                        <TextField id="outlined-basic" label="Phone Number" variant="outlined" />
-                    </div> */}
+                    
                 <Box
                     component="form"
                     sx={{ '& > :not(style)': { m: 1, width: '51ch' } }}
