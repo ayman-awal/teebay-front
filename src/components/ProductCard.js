@@ -1,5 +1,7 @@
 import React from 'react'
 
+
+
 const ProductCard = () => {
   return (
     <div className='center box-border pointer' style={{height: '300px', width: '60%', marginTop: '30px'}}>
