@@ -27,8 +27,16 @@ p, h3 {
   flex-direction: column;
 }
 
+.flex-end {
+  justify-content: end;
+}
+
 .justify-center{
   justify-content: center;
+}
+
+.justify-between{
+  justify-content: space-between;
 }
 
 .align-center{
@@ -50,6 +58,7 @@ p, h3 {
 .m-20{
   margin: 20px 0;
 }
+
 
 .flex-row{
   flex-direction: row;
@@ -73,7 +82,7 @@ p, h3 {
   font-weight: 500;
   color: #5c5a5a;
   font-size: 16px;
-  margin-top: 12px;
+  margin-top: 15px;
 }
 
 .product-description {

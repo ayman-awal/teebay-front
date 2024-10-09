@@ -43,7 +43,7 @@ const SignUp = () => {
             setOpen(true);
             return;
         }
-        else if (password != confirmPassword) {
+        else if (password !== confirmPassword) {
             setOpen(true);
             setMessage('Passwords do not match.');
             return;

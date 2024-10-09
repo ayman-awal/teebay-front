@@ -3,10 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { useQuery, gql } from '@apollo/client';
 import ProductCard from './ProductCard'
 import Button from '@mui/material/Button';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-const GET_ALL_PRODUCTS = gql`
-    query {
-      products{
+const GET_PRODUCT_BY_USER_ID = gql`
+    query productByUserId($id: ID!) {
+        productByUserId(id: $id) {
             id
             title
             categories
@@ -19,40 +20,36 @@ const GET_ALL_PRODUCTS = gql`
     }
 `;
 
+function MyProducts() {
+    const [products, setProducts] = useState([]);
+    const theme = createTheme({
+        palette: {
+          primary: {
+            main: '#FF5733',
+            },
+        },
+    });
 
-const AllProducts = () => {
-  const [products, setProducts] = useState([]);
-  const navigate = useNavigate();
+    const { data, error } = useQuery(GET_PRODUCT_BY_USER_ID, {
+        variables: { id: 4 },
+    });
 
-  const handleMyProductsClick = () => {
-    navigate('/my-products');
-  }
-
-  const handleMyActivityLog = () => {
-    navigate('/activity-log');
-  }
-
-  const { data } = useQuery(GET_ALL_PRODUCTS);
-
-  // console.log(data);
-
-  useEffect(() => {
-    if(data && data.products){
-      setProducts(data.products);
-    }
-    // console.log(products);
-  }, [data])
+    useEffect(() => {
+        if (data && data.productByUserId) {
+            setProducts(data.productByUserId);
+        }
+    }, [data]);
 
   return (
     <div>
         <div className='flex gap-20 flex-end m-20'>
-          <Button variant="outlined" onClick={handleMyActivityLog}>My Activity Log</Button>
-          <Button variant="contained" disableElevation onClick={handleMyProductsClick}>My Products</Button>
+            <ThemeProvider theme={theme}>
+                <Button variant="contained" disableElevation>Logout</Button>
+            </ThemeProvider>
         </div>
         <div className='container center'>
           <div>
-              <h3 style={{textAlign: 'center', margin: '30px 0', fontSize: '30px'}}>ALL PRODUCTS</h3>
-
+              <h3 style={{textAlign: 'center', margin: '30px 0', fontSize: '30px'}}>MY PRODUCTS</h3>
               {products && products.length > 0 ? 
                 products.map((product) => (
                 <ProductCard
@@ -76,4 +73,4 @@ const AllProducts = () => {
   )
 }
 
-export default AllProducts
+export default MyProducts
