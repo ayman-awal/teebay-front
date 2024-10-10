@@ -32,20 +32,22 @@ const AllProducts = () => {
     navigate('/activity-log');
   }
 
-  const { data } = useQuery(GET_ALL_PRODUCTS);
+  const handleCardClick = (product) => {
+    console.log('Clickedd');
+    navigate(`/product/${product.id}`, { state: { product } });
+  };
 
-  // console.log(data);
+  const { data } = useQuery(GET_ALL_PRODUCTS);
 
   useEffect(() => {
     if(data && data.products){
       setProducts(data.products);
     }
-    // console.log(products);
-  }, [data])
+  }, [data]);
 
   return (
     <div>
-        <div className='flex gap-20 flex-end m-20'>
+        <div className='flex gap-20 justify-end m-20'>
           <Button variant="outlined" onClick={handleMyActivityLog}>My Activity Log</Button>
           <Button variant="contained" disableElevation onClick={handleMyProductsClick}>My Products</Button>
         </div>
@@ -56,7 +58,8 @@ const AllProducts = () => {
               {products && products.length > 0 ? 
                 products.map((product) => (
                 <ProductCard
-                    key = {product.title}
+                    key = {product.id}
+                    id={product.id}
                     title = {product.title}
                     categories = {product.categories}
                     purchasePrice = {product.purchasePrice}
@@ -64,6 +67,7 @@ const AllProducts = () => {
                     description = {product.description}
                     datePosted = {product.datePosted}
                     perDay = {product.perDay}
+                    onClick={() => handleCardClick(product)} 
                 />
               )) : (
                     <p>No products available.</p>

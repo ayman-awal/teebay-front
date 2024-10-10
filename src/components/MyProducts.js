@@ -30,9 +30,7 @@ function MyProducts() {
         },
     });
 
-    const { data, error } = useQuery(GET_PRODUCT_BY_USER_ID, {
-        variables: { id: 4 },
-    });
+    const { data } = useQuery(GET_PRODUCT_BY_USER_ID);
 
     useEffect(() => {
         if (data && data.productByUserId) {
@@ -42,7 +40,7 @@ function MyProducts() {
 
   return (
     <div>
-        <div className='flex gap-20 flex-end m-20'>
+        <div className='flex gap-20 justify-end m-20'>
             <ThemeProvider theme={theme}>
                 <Button variant="contained" disableElevation>Logout</Button>
             </ThemeProvider>
@@ -53,7 +51,8 @@ function MyProducts() {
               {products && products.length > 0 ? 
                 products.map((product) => (
                 <ProductCard
-                    key = {product.title}
+                    key = {product.id}
+                    id={product.id}
                     title = {product.title}
                     categories = {product.categories}
                     purchasePrice = {product.purchasePrice}
