@@ -66,7 +66,12 @@ function MyProducts() {
                     <p>No products available.</p>
                 )}
 
-          </div>
+            </div>
+            <div className='center' style={{textAlign: 'center', margin: '30px 0'}}>
+                <ThemeProvider theme={theme}>
+                    <Button variant="contained" disableElevation>Add Product</Button>
+                </ThemeProvider>
+            </div>
         </div>
         
     </div>

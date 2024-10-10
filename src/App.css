@@ -35,6 +35,10 @@ p, h3 {
   justify-content: center;
 }
 
+.justify-space-around{
+  justify-content: space-around;
+}
+
 .justify-between{
   justify-content: space-between;
 }
@@ -53,6 +57,10 @@ p, h3 {
 
 .pd-40{
   padding: 40px;
+}
+
+.pd-20{
+  padding: 20px;
 }
 
 .m-20{

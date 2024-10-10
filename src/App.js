@@ -4,6 +4,7 @@ import SignIn from './components/SignIn';
 import SignUp from './components/SignUp';
 import MyProducts from './components/MyProducts';
 import AllProducts from './components/AllProducts';
+import ActivityLog from './components/ActivityLog';
 
 function App() {
   return (
@@ -12,7 +13,7 @@ function App() {
         <Route path="/" element={<AllProducts />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
-        {/* <Route path="/activity-log" element={<ActivityLog />} /> */}
+        <Route path="/activity-log" element={<ActivityLog />} />
         <Route path="/my-products" element={<MyProducts />} />
       </Routes>
     </Router>
