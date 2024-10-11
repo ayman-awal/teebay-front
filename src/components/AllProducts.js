@@ -45,6 +45,13 @@ const AllProducts = () => {
     }
   }, [data]);
 
+  useEffect(() => {
+    const user = localStorage.getItem('userId');
+    if (!user) {
+        navigate('/signin');
+    }
+  }, [navigate]);
+
   return (
     <div>
         <div className='flex gap-20 justify-end m-20'>

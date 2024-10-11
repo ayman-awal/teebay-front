@@ -6,7 +6,7 @@ import Button from '@mui/material/Button';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 const GET_PRODUCT_BY_USER_ID = gql`
-    query productByUserId($id: ID!) {
+    query productByUserId($id: ID!){
         productByUserId(id: $id) {
             id
             title
@@ -21,7 +21,19 @@ const GET_PRODUCT_BY_USER_ID = gql`
 `;
 
 function MyProducts() {
+    const navigate = useNavigate();
+    const userId = localStorage.getItem('userId');
+    const [loadingAuth, setLoadingAuth] = useState(true);
     const [products, setProducts] = useState([]);
+
+    useEffect(() => {
+        if(!userId){
+            navigate('/signin');
+        } else {
+            setLoadingAuth(false); 
+        }
+    }, [navigate]);
+
     const theme = createTheme({
         palette: {
           primary: {
@@ -30,7 +42,7 @@ function MyProducts() {
         },
     });
 
-    const { data } = useQuery(GET_PRODUCT_BY_USER_ID);
+    const { data } = useQuery(GET_PRODUCT_BY_USER_ID, {variables: { id: userId }, fetchPolicy: 'cache-and-network'});
 
     useEffect(() => {
         if (data && data.productByUserId) {
@@ -38,11 +50,22 @@ function MyProducts() {
         }
     }, [data]);
 
+    if (loadingAuth) {
+        return <p>Loading...</p>;
+      }
+    
+    const handleLogout = () => {
+        localStorage.removeItem('userId');
+        localStorage.removeItem('email');
+        localStorage.removeItem('phoneNumber');
+        navigate('/signin');
+    }
+
   return (
     <div>
         <div className='flex gap-20 justify-end m-20'>
             <ThemeProvider theme={theme}>
-                <Button variant="contained" disableElevation>Logout</Button>
+                <Button variant="contained" onClick={handleLogout} disableElevation>Logout</Button>
             </ThemeProvider>
         </div>
         <div className='container center'>

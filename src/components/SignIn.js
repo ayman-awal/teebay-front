@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useMutation, gql } from '@apollo/client';
+import { useNavigate } from "react-router-dom";
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -27,6 +28,14 @@ const SignIn = () => {
     const [login, { loading, error, data }] = useMutation(LOGIN_MUTATION);
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState('');
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const user = localStorage.getItem('userId');
+        if (user) {
+            navigate('/');
+        }
+      }, [navigate]);
 
     const handleLogin = async () => {
         if (!email || !password) {
@@ -38,6 +47,10 @@ const SignIn = () => {
             try {
                 const { data } = await login({ variables: { input: { email, password } } });
                 console.log('Login successful:', data);
+                localStorage.setItem('userId', data.login.id);
+                localStorage.setItem('email', data.login.email);
+                localStorage.setItem('phoneNumber', data.login.phoneNumber);
+                navigate('/', { state: { data } });
             } catch (error) {
                 console.error('Login failed:', error.message);
             }

@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useMutation, gql } from '@apollo/client';
+import { useNavigate } from "react-router-dom";
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -9,7 +10,9 @@ import MuiAlert from '@mui/material/Alert';
 const REGISTER_MUTATION = gql`
     mutation Register($input: RegisterInput!) {
         register(input: $input) {
+            id
             email
+            phoneNumber
         }
     }
 `;
@@ -29,6 +32,14 @@ const SignUp = () => {
     const [register, { loading, error, data }] = useMutation(REGISTER_MUTATION);
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState('');
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const user = localStorage.getItem('userId');
+        if (user) {
+            navigate('/');
+        }
+      }, [navigate]);
 
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
@@ -52,6 +63,10 @@ const SignUp = () => {
             try {
                 const { data } = await register({ variables: { input: { firstName, lastName, email, password, confirmPassword, address, phoneNumber } } });
                 console.log('Login successful:', data);
+                localStorage.setItem('userId', data.register.id);
+                localStorage.setItem('email', data.register.email);
+                localStorage.setItem('phoneNumber', data.register.phoneNumber);
+                navigate('/');
             } catch (error) {
                 console.error('Login failed:', error.message);
             }
