@@ -16,7 +16,6 @@ const GET_PRODUCTS_BY_TRANSACTION = gql`
         rentPrice
         description
         datePosted
-        perDay
       }
     }
   }
@@ -89,7 +88,6 @@ function ActivityLog() {
               rentPrice={product.product.rentPrice}
               description={product.product.description}
               datePosted={product.product.datePosted}
-              perDay={product.product.perDay}
             />
           ))
         ) : (

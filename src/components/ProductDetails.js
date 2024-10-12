@@ -23,7 +23,6 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 //             rentPrice
 //             description
 //             datePosted
-//             perDay
 //         }
 //     }
 // `;
@@ -50,11 +49,16 @@ function ProductDetails() {
 
     const [fromValue, setFromValue] = useState(dayjs(nextDay));
     const [toValue, setToValue] = useState(dayjs(nextWeek));
-    const [open, setOpen] = useState(false);
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => {console.log("Closed"); setOpen(false)};
+    const [openRentModal, setOpenRentModal] = useState(false);
+    const [openBuyModal, setOpenBuyModal] = useState(false);
     const location = useLocation();
     const { product } = location.state;
+
+    const rentModal = () => setOpenRentModal(true);
+    const closeRentModal = () => {console.log("Closed"); setOpenRentModal(false)};
+
+    const buyModal = () => setOpenBuyModal(true);
+    const closeBuyModal = () => {console.log("Closed"); setOpenBuyModal(false)};
 
     const theme = createTheme({
         palette: {
@@ -73,25 +77,12 @@ function ProductDetails() {
         console.log(toValue);
         console.log(id);
 
-        handleClose();
+        closeRentModal();
     }
-//     console.log(id); 
-//     console.log(!product.id); 
-//   if (!id) {
-//     return <p>Invalid product Id</p>;
-//   }
-//   else{
-//     if(id !== product.id){
-//        console.log(id); 
-//        console.log(product.id); 
-    // }
-    // else{
-    //     const { data } = useQuery(GET_PRODUCT_BY_ID);
-        
-    // }
-//   }
 
-const { title, categories, purchasePrice, description, datePosted } = product;
+
+const { title, categories, purchasePrice, description, datePosted, isAvailable } = product;
+console.log(product)
 
     return (
             <div className='flex justify-center align-center' style={{height: '100vh'}}>
@@ -110,7 +101,7 @@ const { title, categories, purchasePrice, description, datePosted } = product;
                         </div>
                         <div className='flex gap-20 justify-end'>
                             <ThemeProvider theme={theme}>
-                                <Button variant="contained" disableElevation onClick={handleOpen}>Rent</Button>
+                                <Button variant="contained" disableElevation onClick={rentModal}>Rent</Button>
                             </ThemeProvider>
                             <ThemeProvider theme={theme}>
                                 <Button variant="contained" disableElevation>Buy</Button>
@@ -119,8 +110,8 @@ const { title, categories, purchasePrice, description, datePosted } = product;
                     </div>
                     <div>
                         <Modal
-                            open={open}
-                            onClose={handleClose}
+                            open={openRentModal}
+                            onClose={closeRentModal}
                             aria-labelledby="modal-modal-title"
                             aria-describedby="modal-modal-description"
                         >
@@ -143,14 +134,19 @@ const { title, categories, purchasePrice, description, datePosted } = product;
                                             />
                                         </DemoContainer>
                                     </LocalizationProvider>
-                                <Box className='flex gap-20 justify-end'>
-                                    <ThemeProvider theme={theme}>
-                                        <Button variant="contained" disableElevation onClick={handleClose} color="secondary">Go Back</Button>
-                                    </ThemeProvider>
-                                    <ThemeProvider theme={theme}>
-                                        <Button variant="contained" disableElevation onClick={() => handleRent()}>Confirm Rent</Button>
-                                    </ThemeProvider>
-                                </Box>
+                                    {
+                                        isAvailable === false ? (
+                                            <p>This product is not available</p>
+                                        ) : (
+                                            <ThemeProvider theme={theme}>
+                                            <Box className='flex gap-20 justify-end'>
+                                                <Button variant="contained" disableElevation onClick={closeRentModal} color="secondary">Go Back</Button>
+                                                <Button variant="contained" disableElevation /*onClick={}*/>Confirm Rent</Button>
+                                            </Box>
+                                            </ThemeProvider>
+                                        )
+                                    }
+                                
                             </Box>
                         </Modal>
                     </div>

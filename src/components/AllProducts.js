@@ -14,7 +14,6 @@ const GET_ALL_PRODUCTS = gql`
             rentPrice
             description
             datePosted
-            perDay
         }
     }
 `;
@@ -73,7 +72,7 @@ const AllProducts = () => {
                     rentPrice = {product.rentPrice}
                     description = {product.description}
                     datePosted = {product.datePosted}
-                    perDay = {product.perDay}
+                    isAvailable = {product.isAvailable}
                     onClick={() => handleCardClick(product)} 
                 />
               )) : (

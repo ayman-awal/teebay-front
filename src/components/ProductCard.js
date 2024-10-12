@@ -3,9 +3,33 @@ import { useLocation } from 'react-router-dom';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-const ProductCard = ({id, title, categories, purchasePrice, rentPrice, description, datePosted, perDay, onClick}) => {
+const ProductCard = ({id, title, categories, purchasePrice, rentPrice, description, datePosted, isAvailable, onClick}) => {
   const location = useLocation();
   const [showDelete, setShowDelete] = useState(false);
+
+  function formatTimestamp(timestamp) {
+    const date = new Date(timestamp);
+
+    const day = date.getDate();
+    const monthIndex = date.getMonth();
+    const year = date.getFullYear();
+
+    const monthNames = [
+        "Jan", "Feb", "Mar", "Apr", "May", "Jun", 
+        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+    ];
+
+    function getOrdinalSuffix(num) {
+        const suffixes = ["th", "st", "nd", "rd"];
+        const value = num % 100;
+        return suffixes[(value - 20) % 10] || suffixes[value] || suffixes[0];
+    }
+
+    const formattedDate = `${day}${getOrdinalSuffix(day)} ${monthNames[monthIndex]} ${year}`;
+    return formattedDate;
+  }
+
+  const formattedDatePosted = formatTimestamp(parseInt(datePosted, 10));
 
   useEffect(() => {
     if(location.pathname === '/my-products'){
@@ -32,7 +56,7 @@ const ProductCard = ({id, title, categories, purchasePrice, rentPrice, descripti
 
           </div>
           <div>
-            <p className='product-detail-text'>Date posted: {datePosted}</p>
+            <p className='product-detail-text'>Date posted: {formattedDatePosted}</p>
           </div>
         </div>
         

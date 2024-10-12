@@ -15,7 +15,6 @@ const GET_PRODUCT_BY_USER_ID = gql`
             rentPrice
             description
             datePosted
-            perDay
         }
     }
 `;
@@ -61,6 +60,11 @@ function MyProducts() {
         navigate('/signin');
     }
 
+    const handleAddProduct = () => {
+        console.log('clickedddd');
+        navigate('/add-product');
+    }
+
   return (
     <div>
         <div className='flex gap-20 justify-end m-20'>
@@ -82,7 +86,7 @@ function MyProducts() {
                     rentPrice = {product.rentPrice}
                     description = {product.description}
                     datePosted = {product.datePosted}
-                    perDay = {product.perDay}
+                    isAvailable = {product.isAvailable}
                 />
               )) : (
                     <p>No products available.</p>
@@ -91,7 +95,7 @@ function MyProducts() {
             </div>
             <div className='center' style={{textAlign: 'center', margin: '30px 0'}}>
                 <ThemeProvider theme={theme}>
-                    <Button variant="contained" disableElevation>Add Product</Button>
+                    <Button variant="contained" disableElevation onClick={handleAddProduct}>Add Product</Button>
                 </ThemeProvider>
             </div>
         </div>
