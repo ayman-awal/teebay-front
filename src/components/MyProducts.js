@@ -15,6 +15,8 @@ const GET_PRODUCT_BY_USER_ID = gql`
             rentPrice
             description
             datePosted
+            rentFrequency
+            isAvailable
         }
     }
 `;
@@ -84,6 +86,7 @@ function MyProducts() {
                     categories = {product.categories}
                     purchasePrice = {product.purchasePrice}
                     rentPrice = {product.rentPrice}
+                    rentFrequency = {product.rentFrequency}
                     description = {product.description}
                     datePosted = {product.datePosted}
                     isAvailable = {product.isAvailable}

@@ -85,74 +85,74 @@ const { title, categories, purchasePrice, description, datePosted, isAvailable }
 console.log(product)
 
     return (
-            <div className='flex justify-center align-center' style={{height: '100vh'}}>
-                <div className='center' style={{minHeight: '400px', width: '40%', marginTop: '30px'}}>
-                    <div className='product-card-container flex flex-col gap-45' style={{padding: '30px'}}>
-                        <div>
-                            <div className='flex justify-between'>
-                                <p className='product-title'>{title}</p>
-
-                            </div>
-                            <p className='product-detail-text'>Categories: {categories}</p>
-                            <p className='product-detail-text'>Price: ${purchasePrice}</p>
-
-                            <p className='product-description'>{description}</p>
-
-                        </div>
-                        <div className='flex gap-20 justify-end'>
-                            <ThemeProvider theme={theme}>
-                                <Button variant="contained" disableElevation onClick={rentModal}>Rent</Button>
-                            </ThemeProvider>
-                            <ThemeProvider theme={theme}>
-                                <Button variant="contained" disableElevation>Buy</Button>
-                            </ThemeProvider>
-                        </div>
-                    </div>
+        <div className='flex justify-center align-center' style={{height: '100vh'}}>
+            <div className='center' style={{minHeight: '400px', width: '40%', marginTop: '30px'}}>
+                <div className='product-card-container flex flex-col gap-45' style={{padding: '30px'}}>
                     <div>
-                        <Modal
-                            open={openRentModal}
-                            onClose={closeRentModal}
-                            aria-labelledby="modal-modal-title"
-                            aria-describedby="modal-modal-description"
-                        >
-                            <Box sx={style}>
-                                <Typography id="modal-modal-title" variant="h6" component="h2">
-                                    Rental period
-                                </Typography>
-                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                        <DemoContainer components={['DatePicker', 'DatePicker']} sx={{ mb: 6, mt: 6 }}>
-                                            <DatePicker
-                                                label="From"
-                                                value={fromValue}
-                                                onChange={(newValue) => {console.log("New From date:", newValue.format()); setFromValue(newValue)}}
-                                            />
+                        <div className='flex justify-between'>
+                            <p className='product-title'>{title}</p>
 
-                                            <DatePicker
-                                                label="To"
-                                                value={toValue}
-                                                onChange={(newValue) => {console.log("New To date:", newValue.format()); setToValue(newValue)}}
-                                            />
-                                        </DemoContainer>
-                                    </LocalizationProvider>
-                                    {
-                                        isAvailable === false ? (
-                                            <p>This product is not available</p>
-                                        ) : (
-                                            <ThemeProvider theme={theme}>
-                                            <Box className='flex gap-20 justify-end'>
-                                                <Button variant="contained" disableElevation onClick={closeRentModal} color="secondary">Go Back</Button>
-                                                <Button variant="contained" disableElevation /*onClick={}*/>Confirm Rent</Button>
-                                            </Box>
-                                            </ThemeProvider>
-                                        )
-                                    }
-                                
-                            </Box>
-                        </Modal>
+                        </div>
+                        <p className='product-detail-text'>Categories: {categories}</p>
+                        <p className='product-detail-text'>Price: ${purchasePrice}</p>
+
+                        <p className='product-description'>{description}</p>
+
                     </div>
-                    
+                    <div className='flex gap-20 justify-end'>
+                        <ThemeProvider theme={theme}>
+                            <Button variant="contained" disableElevation onClick={rentModal}>Rent</Button>
+                        </ThemeProvider>
+                        <ThemeProvider theme={theme}>
+                            <Button variant="contained" disableElevation>Buy</Button>
+                        </ThemeProvider>
+                    </div>
                 </div>
+                <div>
+                    <Modal
+                        open={openRentModal}
+                        onClose={closeRentModal}
+                        aria-labelledby="modal-modal-title"
+                        aria-describedby="modal-modal-description"
+                    >
+                        <Box sx={style}>
+                            <Typography id="modal-modal-title" variant="h6" component="h2">
+                                Rental period
+                            </Typography>
+                                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                    <DemoContainer components={['DatePicker', 'DatePicker']} sx={{ mb: 6, mt: 6 }}>
+                                        <DatePicker
+                                            label="From"
+                                            value={fromValue}
+                                            onChange={(newValue) => {console.log("New From date:", newValue.format()); setFromValue(newValue)}}
+                                        />
+
+                                        <DatePicker
+                                            label="To"
+                                            value={toValue}
+                                            onChange={(newValue) => {console.log("New To date:", newValue.format()); setToValue(newValue)}}
+                                        />
+                                    </DemoContainer>
+                                </LocalizationProvider>
+                                {
+                                    isAvailable === false ? (
+                                        <p>This product is not available</p>
+                                    ) : (
+                                        <ThemeProvider theme={theme}>
+                                        <Box className='flex gap-20 justify-end'>
+                                            <Button variant="contained" disableElevation onClick={closeRentModal} color="secondary">Go Back</Button>
+                                            <Button variant="contained" disableElevation /*onClick={}*/>Confirm Rent</Button>
+                                        </Box>
+                                        </ThemeProvider>
+                                    )
+                                }
+                            
+                        </Box>
+                    </Modal>
+                </div>
+                
             </div>
+        </div>
     );
 }
 

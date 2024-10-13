@@ -29,16 +29,16 @@ const categories = [
   'Outdoor'
 ];
 
-function getStyles(name, personName, theme) {
+function getStyles(name, categories, theme) {
   return {
-    fontWeight: personName.includes(name)
+    fontWeight: categories.includes(name)
       ? theme.typography.fontWeightMedium
       : theme.typography.fontWeightRegular,
   };
 }
 
 const SelectCategories = ({ nextStep, prevStep, values, handleChange }) => {
-  const [personName, setPersonName] = useState([]);
+  const [categories, setCategories] = useState([]);
   const theme = useTheme();
 
   
@@ -54,9 +54,9 @@ const SelectCategories = ({ nextStep, prevStep, values, handleChange }) => {
   // };
 
   useEffect(() => {
-    console.log('Updated personName:', personName);
-    handleChange('categories')({ target: { value: personName } }); 
-  }, [personName]);
+    console.log('Updated categories:', categories);
+    handleChange('categories')({ target: { value: categories } }); 
+  }, [categories]);
 
   const handleDropdown = (event) => {
     const {
@@ -64,7 +64,7 @@ const SelectCategories = ({ nextStep, prevStep, values, handleChange }) => {
     } = event;
 
     const newValues = typeof value === 'string' ? value.split(',') : value;
-    setPersonName(newValues);
+    setCategories(newValues);
     console.log('New values selected:', newValues);
   };
 
@@ -91,7 +91,7 @@ const SelectCategories = ({ nextStep, prevStep, values, handleChange }) => {
                   <MenuItem
                     key={name}
                     value={name}
-                    style={getStyles(name, personName, theme)}
+                    style={getStyles(name, categories, theme)}
                   >
                     {name}
                   </MenuItem>

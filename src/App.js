@@ -7,6 +7,7 @@ import AllProducts from './components/AllProducts';
 import ActivityLog from './components/ActivityLog';
 import ProductDetails from './components/ProductDetails';
 import UserFrom from './components/product-form/UserForm';
+import EditProducts from './components/EditProducts';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/activity-log" element={<ActivityLog />} />
         <Route path="/my-products" element={<MyProducts />} />
         <Route path="/product/:id" element={<ProductDetails />} />
+        <Route path="/edit-product/:id" element={<EditProducts />} />
         <Route path="/add-product" element={<UserFrom />} />
       </Routes>
     </Router>
