@@ -2,11 +2,8 @@ import React, { useState } from 'react';
 import SelectTitle from './SelectTitle';
 import SelectCategories from './SelectCategories';
 import RentDetails from './PriceDetails';
-// import Confirm from './Confirm';
 import SelectDescription from './SelectDescription';
 import ProductSummary from './ProductSummary';
-
-// import Success from './Success';
 
 const UserForm = () => {
   const [step, setStep] = useState(1);
@@ -28,7 +25,6 @@ const UserForm = () => {
   };
 
   const handleChange = input => e => {
-    // setValues({ ...values, [input]: e.target.value });
     const { value } = e.target;
     setValues(prevValues => ({
       ...prevValues,
@@ -62,14 +58,8 @@ const UserForm = () => {
           handleChange={handleChange}
           values={values}
         />
-        // <Confirm
-        //   nextStep={nextStep}
-        //   prevStep={prevStep}
-        //   values={values}
-        // />
       );
     case 4:
-      // return <Success />;
       return (
         <RentDetails
           nextStep={nextStep}
@@ -79,7 +69,6 @@ const UserForm = () => {
         />
       );
     case 5:
-      // return <Success />;
       return (
         <ProductSummary
           prevStep={prevStep}

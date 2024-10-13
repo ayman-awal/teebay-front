@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react'
+import CustomAlert from './CustomAlert';
 import { useMutation, gql } from '@apollo/client';
 import { useNavigate } from "react-router-dom";
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Snackbar from '@mui/material/Snackbar';
-import MuiAlert from '@mui/material/Alert';
 
 const LOGIN_MUTATION = gql`
   mutation Login($input: LoginInput!) {
@@ -18,17 +17,15 @@ const LOGIN_MUTATION = gql`
   }
 `;
 
-const Alert = React.forwardRef(function Alert(props, ref) {
-    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-  });
-
 const SignIn = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [login, { loading, error, data }] = useMutation(LOGIN_MUTATION);
-    const [open, setOpen] = useState(false);
-    const [message, setMessage] = useState('');
     const navigate = useNavigate();
+
+    const [alertOpen, setAlertOpen] = useState(false);
+    const [alertMessage, setAlertMessage] = useState('');
+    const [alertSeverity, setAlertSeverity] = useState('warning');
 
     useEffect(() => {
         const user = localStorage.getItem('userId');
@@ -39,8 +36,9 @@ const SignIn = () => {
 
     const handleLogin = async () => {
         if (!email || !password) {
-            setMessage('Please enter both email and password.');
-            setOpen(true);
+            setAlertMessage('Please fill in all fields.');
+            setAlertSeverity('warning');
+            setAlertOpen(true);
             return;
         }
         else{
@@ -52,18 +50,13 @@ const SignIn = () => {
                 localStorage.setItem('phoneNumber', data.login.phoneNumber);
                 navigate('/', { state: { data } });
             } catch (error) {
-                console.error('Login failed:', error.message);
+                setAlertMessage(error.message);
+                setAlertSeverity('error');
+                setAlertOpen(true);
             }
         }
         
     }
-
-    const handleClose = (event, reason) => {
-        if (reason === 'clickaway') {
-          return;
-        }
-        setOpen(false);
-      };
 
   return (
     <div className='flex justify-center align-center' style={{margin: "auto", textAlign: "center", height: "100vh"}}>
@@ -73,7 +66,6 @@ const SignIn = () => {
                 <div>
                     <div className='flex flex-col gap-20'>
                         <TextField 
-                            id="outlined-basic" 
                             label="Email" 
                             variant="outlined"
                             value={ email }
@@ -83,7 +75,6 @@ const SignIn = () => {
                         />
 
                         <TextField 
-                            id="outlined-basic" 
                             label="Password" 
                             variant="outlined" 
                             value={ password }
@@ -101,11 +92,13 @@ const SignIn = () => {
                 </div>
             </div>
         </div>
-        <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-            <Alert onClose={handleClose} severity="warning" sx={{ width: '100%' }}>
-                {message}
-            </Alert>
-        </Snackbar>
+        <CustomAlert 
+            message={alertMessage} 
+            open={alertOpen} 
+            severity={alertSeverity} 
+            onClose={() => setAlertOpen(false)}
+        />
+        
     </div>
   )
 }

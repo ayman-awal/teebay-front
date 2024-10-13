@@ -1,46 +1,19 @@
 import React, { useState } from 'react';
-// import Dialog from '@mui/material/Dialog';
-// import AppBar from '@mui/material/AppBar';
 import { ThemeProvider, createTheme, useTheme } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-// import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import OutlinedInput from '@mui/material/OutlinedInput';
-
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};
-
+import { MenuProps, getStyles } from "../../utils/SelectCompUtil";
 
 
 const RentDetails = ({ nextStep, prevStep, values, handleChange }) => {
   const [rentRate, setRentRate] = useState([]);
   const theme = useTheme();
-
-  // const continueHandler = (e) => {
-  //   e.preventDefault();
-  //   nextStep();
-  // };
-
-  function getStyles(name, rentRate, theme) {
-    return {
-      fontWeight: rentRate.includes(name)
-        ? theme.typography.fontWeightMedium
-        : theme.typography.fontWeightRegular,
-    };
-  }
 
   const rentFrequency = [
     'per hour',

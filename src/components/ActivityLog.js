@@ -7,16 +7,7 @@ const GET_PRODUCTS_BY_TRANSACTION = gql`
   query GetProductsByTransaction($id: ID!, $type: String!, $action: String!){
     productsByTransaction(id: $id, type: $type, action: $action) {
       id
-      """transactionType
-      product {
-        id
-        title
-        categories
-        purchasePrice
-        rentPrice
-        description
-        datePosted
-      }}"""
+      
     }
   }
 `;
@@ -31,7 +22,7 @@ function ActivityLog() {
     const type = selectedOption === 'Sold' || selectedOption === 'Bought' ? 'SALE' : 'RENTAL';
 
     const { loading, error, data } = useQuery(GET_PRODUCTS_BY_TRANSACTION, {
-      variables: { id: userId, type, action: selectedOption },
+      variables: { id: parseInt(userId, 10), type, action: selectedOption },
       fetchPolicy: 'cache-and-network',
     });
 

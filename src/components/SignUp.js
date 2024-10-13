@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react'
+import CustomAlert from './CustomAlert';
 import { useMutation, gql } from '@apollo/client';
 import { useNavigate } from "react-router-dom";
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Snackbar from '@mui/material/Snackbar';
-import MuiAlert from '@mui/material/Alert';
 
 const REGISTER_MUTATION = gql`
     mutation Register($input: RegisterInput!) {
@@ -17,10 +16,6 @@ const REGISTER_MUTATION = gql`
     }
 `;
 
-const Alert = React.forwardRef(function Alert(props, ref) {
-    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-  });
-
 const SignUp = () => {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -30,9 +25,11 @@ const SignUp = () => {
     const [address, setAddress] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
     const [register, { loading, error, data }] = useMutation(REGISTER_MUTATION);
-    const [open, setOpen] = useState(false);
-    const [message, setMessage] = useState('');
     const navigate = useNavigate();
+
+    const [alertOpen, setAlertOpen] = useState(false);
+    const [alertMessage, setAlertMessage] = useState('');
+    const [alertSeverity, setAlertSeverity] = useState('warning');
 
     useEffect(() => {
         const user = localStorage.getItem('userId');
@@ -40,23 +37,18 @@ const SignUp = () => {
             navigate('/');
         }
       }, [navigate]);
-
-    const handleClose = (event, reason) => {
-        if (reason === 'clickaway') {
-          return;
-        }
-        setOpen(false);
-      };
       
     const handleRegister = async () => {
         if (!firstName || !lastName || !email || !password || !confirmPassword || !address || !phoneNumber)  {
-            setMessage('Please fill in all fields.');
-            setOpen(true);
+            setAlertMessage('Please fill in all fields.');
+            setAlertSeverity('warning');
+            setAlertOpen(true);
             return;
         }
         else if (password !== confirmPassword) {
-            setOpen(true);
-            setMessage('Passwords do not match.');
+            setAlertMessage('Passwords do not match.');
+            setAlertSeverity('warning');
+            setAlertOpen(true);
             return;
         }
         else{
@@ -68,7 +60,9 @@ const SignUp = () => {
                 localStorage.setItem('phoneNumber', data.register.phoneNumber);
                 navigate('/');
             } catch (error) {
-                console.error('Login failed:', error.message);
+                setAlertMessage(error.message);
+                setAlertSeverity('warning');
+                setAlertOpen(true);
             }
         }
     }
@@ -84,10 +78,9 @@ const SignUp = () => {
                         sx={{ '& > :not(style)': { m: 1, width: '25ch' } }}
                         noValidate
                         autoComplete="off"
-                        flex flex-row justify-center align-center gap-20
+                        // flex flex-row justify-center align-center gap-20
                     >
                         <TextField 
-                            id="outlined-basic" 
                             label="First Name"
                             variant="outlined"
                             value={ firstName }
@@ -95,7 +88,6 @@ const SignUp = () => {
                             required
                         />
                         <TextField 
-                            id="outlined-basic" 
                             label="Last Name" 
                             variant="outlined" 
                             value={ lastName }
@@ -109,10 +101,9 @@ const SignUp = () => {
                         sx={{ '& > :not(style)': { m: 1, width: '51ch' } }}
                         noValidate
                         autoComplete="off"
-                        flex flex-row justify-center align-center gap-20
+                        // flex flex-row justify-center align-center gap-20
                     >
                         <TextField 
-                            id="outlined-basic" 
                             label="Address" 
                             variant="outlined" 
                             value={ address } 
@@ -126,10 +117,9 @@ const SignUp = () => {
                         sx={{ '& > :not(style)': { m: 1, width: '25ch' } }}
                         noValidate
                         autoComplete="off"
-                        flex flex-row justify-center align-center gap-20
+                        // flex flex-row justify-center align-center gap-20
                     >
                         <TextField 
-                            id="outlined-basic" 
                             label="Email" 
                             variant="outlined" 
                             value={ email }
@@ -138,7 +128,6 @@ const SignUp = () => {
                         />
 
                         <TextField 
-                            id="outlined-basic" 
                             label="Phone Number" 
                             variant="outlined" 
                             value={ phoneNumber }
@@ -152,10 +141,9 @@ const SignUp = () => {
                         sx={{ '& > :not(style)': { m: 1, width: '51ch' } }}
                         noValidate
                         autoComplete="off"
-                        flex flex-row justify-center align-center gap-20
+                        // flex flex-row justify-center align-center gap-20
                     >
                         <TextField 
-                            id="outlined-basic" 
                             label="Password" 
                             variant="outlined" 
                             type='password' 
@@ -170,10 +158,9 @@ const SignUp = () => {
                         sx={{ '& > :not(style)': { m: 1, width: '51ch' } }}
                         noValidate
                         autoComplete="off"
-                        flex flex-row justify-center align-center gap-20
+                        // flex flex-row justify-center align-center gap-20
                     >
                         <TextField 
-                            id="outlined-basic" 
                             label="Confirm Password" 
                             variant="outlined" 
                             type='password' 
@@ -192,12 +179,14 @@ const SignUp = () => {
                     <p>Already have an account? <a href="/signin" className='remove-underline'>Sign in</a></p>
                 </div>
             </div>
+            <CustomAlert 
+                message={alertMessage} 
+                open={alertOpen} 
+                severity={alertSeverity} 
+                onClose={() => setAlertOpen(false)}
+            />
         </div>
-        <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-            <Alert onClose={handleClose} severity="warning" sx={{ width: '100%' }}>
-                {message}
-            </Alert>
-        </Snackbar>
+        
     </div>
   )
 }
