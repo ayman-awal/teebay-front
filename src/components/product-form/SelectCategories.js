@@ -21,13 +21,7 @@ const MenuProps = {
   },
 };
 
-const categories = [
-  'Electronics',
-  'Furniture',
-  'Home Appliances',
-  'Sporting Goods',
-  'Outdoor'
-];
+
 
 function getStyles(name, categories, theme) {
   return {
@@ -41,7 +35,13 @@ const SelectCategories = ({ nextStep, prevStep, values, handleChange }) => {
   const [categories, setCategories] = useState([]);
   const theme = useTheme();
 
-  
+  const categoryOptions = [
+    'Electronics',
+    'Furniture',
+    'Home Appliances',
+    'Sporting Goods',
+    'Outdoor'
+  ];
 
   // const continueHandler = (e) => {
   //   e.preventDefault();
@@ -87,7 +87,7 @@ const SelectCategories = ({ nextStep, prevStep, values, handleChange }) => {
                 // fullWidth
                 MenuProps={MenuProps}
               >
-                {categories.map((name) => (
+                {categoryOptions.map((name) => (
                   <MenuItem
                     key={name}
                     value={name}

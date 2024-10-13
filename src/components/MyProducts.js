@@ -40,6 +40,9 @@ function MyProducts() {
           primary: {
             main: '#FF5733',
             },
+          secondary: {
+            main: '#ae34eb',
+          }
         },
     });
 
@@ -62,6 +65,10 @@ function MyProducts() {
         navigate('/signin');
     }
 
+    const handleFeed = () => {
+        navigate('/');
+    }
+
     const handleAddProduct = () => {
         console.log('clickedddd');
         navigate('/add-product');
@@ -71,7 +78,8 @@ function MyProducts() {
     <div>
         <div className='flex gap-20 justify-end m-20'>
             <ThemeProvider theme={theme}>
-                <Button variant="contained" onClick={handleLogout} disableElevation>Logout</Button>
+                <Button variant="contained" onClick={handleFeed} color='secondary' disableElevation>Feed</Button>
+                <Button variant="contained" onClick={handleLogout} style={{marginRight: '20px'}} disableElevation>Logout</Button>
             </ThemeProvider>
         </div>
         <div className='container center'>

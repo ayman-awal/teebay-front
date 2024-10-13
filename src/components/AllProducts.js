@@ -14,6 +14,8 @@ const GET_ALL_PRODUCTS = gql`
             rentPrice
             description
             datePosted
+            userId
+            isAvailable
         }
     }
 `;
@@ -66,6 +68,7 @@ const AllProducts = () => {
                 <ProductCard
                     key = {product.id}
                     id={product.id}
+                    userId={product.userId}
                     title = {product.title}
                     categories = {product.categories}
                     purchasePrice = {product.purchasePrice}

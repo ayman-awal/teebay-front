@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import { useQuery, gql } from '@apollo/client';
-import { useParams } from 'react-router-dom';
+import { useQuery, gql, useMutation } from '@apollo/client';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -27,6 +27,17 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 //     }
 // `;
 
+
+const CREATE_TRANSACTION_MUTATION = gql`
+    mutation editProduct($input: createTransactionInput!) {
+        createTransaction(input: $input) {
+            id
+            title
+            description
+        }
+    }
+    `;
+
 const style = {
     position: 'absolute',
     top: '50%',
@@ -42,23 +53,33 @@ const style = {
 
 function ProductDetails() {
     const { id } = useParams();
+
+    const loggedInUser = localStorage.getItem('userId');
+    const navigate = useNavigate();
     // const [queriedProduct, setQueriedProduct] = useState([]);
+    const [createTransaction, { data }] = useMutation(CREATE_TRANSACTION_MUTATION);
+    
     const today = dayjs();
     const nextDay = today.add(1, 'day');
     const nextWeek = today.add(7, 'day'); 
 
     const [fromValue, setFromValue] = useState(dayjs(nextDay));
     const [toValue, setToValue] = useState(dayjs(nextWeek));
+    const [primaryUserId, setPrimaryUserId] = useState();
+    const [secondaryUserId, setSecondaryUserId] = useState();
+    const [transactionType, setTransactionType] = useState('');
     const [openRentModal, setOpenRentModal] = useState(false);
     const [openBuyModal, setOpenBuyModal] = useState(false);
     const location = useLocation();
     const { product } = location.state;
-
+   
     const rentModal = () => setOpenRentModal(true);
     const closeRentModal = () => {console.log("Closed"); setOpenRentModal(false)};
 
     const buyModal = () => setOpenBuyModal(true);
     const closeBuyModal = () => {console.log("Closed"); setOpenBuyModal(false)};
+
+    const { title, userId, categories, purchasePrice, description, datePosted, isAvailable } = product;
 
     const theme = createTheme({
         palette: {
@@ -75,13 +96,38 @@ function ProductDetails() {
         console.log("RENTT");
         console.log(fromValue);
         console.log(toValue);
-        console.log(id);
+        console.log("primaryUser: " + userId);
+        console.log("secondaryUser: " + localStorage.getItem('userId'));
+        console.log("productId: " + id);
+
+        try {
+            const { data } = await createTransaction({
+                variables: {
+                    input: {
+                        transactionType: 'RENT',
+                        productId: parseInt(id, 10), 
+                        primaryUserId: parseInt(userId, 10), 
+                        secondaryUserId: parseInt(localStorage.getItem('userId'), 10),
+                        rentFrom: fromValue,
+                        rentTo: toValue
+                    }
+                }
+            });
+            console.log("Rented");
+            // navigate('/activity')
+        } catch (error) {
+            console.error(error);
+        }
 
         closeRentModal();
     }
 
+    const navigateProduct = () => {
+        // navigate('/', { replace: true });
+        navigate('/my-products');
+    }
 
-const { title, categories, purchasePrice, description, datePosted, isAvailable } = product;
+
 console.log(product)
 
     return (
@@ -99,14 +145,36 @@ console.log(product)
                         <p className='product-description'>{description}</p>
 
                     </div>
-                    <div className='flex gap-20 justify-end'>
+                    {
+                        !isAvailable ? (
+                            <div className='flex gap-20 justify-end'>
+                                <p className='product-detail-text'>Product currently unavailable</p>
+                            </div>
+                        ) :
+                            (
+                                userId !== loggedInUser ? (
+                                    <div className='flex gap-20 justify-end'>
+                                        <ThemeProvider theme={theme}>
+                                            <Button variant="contained" disableElevation onClick={rentModal}>Rent</Button>
+                                            <Button variant="contained" disableElevation>Buy</Button>
+                                        </ThemeProvider>
+                                    </div>
+                                ) : 
+                                (
+                                    <div className='flex justify-end'>
+                                        <Button variant="outlined" onClick={navigateProduct}>My Products</Button>
+                                    </div>
+                                )
+                            )
+                    }
+                    {/* <div className='flex gap-20 justify-end'>
                         <ThemeProvider theme={theme}>
                             <Button variant="contained" disableElevation onClick={rentModal}>Rent</Button>
                         </ThemeProvider>
                         <ThemeProvider theme={theme}>
                             <Button variant="contained" disableElevation>Buy</Button>
                         </ThemeProvider>
-                    </div>
+                    </div> */}
                 </div>
                 <div>
                     <Modal
@@ -124,12 +192,14 @@ console.log(product)
                                         <DatePicker
                                             label="From"
                                             value={fromValue}
-                                            onChange={(newValue) => {console.log("New From date:", newValue.format()); setFromValue(newValue)}}
+                                            disablePast
+                                            onChange={(newValue) => {console.log("New From date:", newValue.format()); setFromValue((newValue))}}
                                         />
 
                                         <DatePicker
                                             label="To"
                                             value={toValue}
+                                            disablePast
                                             onChange={(newValue) => {console.log("New To date:", newValue.format()); setToValue(newValue)}}
                                         />
                                     </DemoContainer>
@@ -141,7 +211,7 @@ console.log(product)
                                         <ThemeProvider theme={theme}>
                                         <Box className='flex gap-20 justify-end'>
                                             <Button variant="contained" disableElevation onClick={closeRentModal} color="secondary">Go Back</Button>
-                                            <Button variant="contained" disableElevation /*onClick={}*/>Confirm Rent</Button>
+                                            <Button variant="contained" disableElevation onClick={handleRent}>Confirm Rent</Button>
                                         </Box>
                                         </ThemeProvider>
                                     )

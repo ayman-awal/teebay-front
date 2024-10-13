@@ -33,14 +33,14 @@ import MuiAlert from '@mui/material/Alert';
 
 
   const EDIT_PRODUCT_MUTATION = gql`
-  mutation editProduct($input: editProductInput!) {
-        editProduct(input: $input) {
-          id
-          title
-          description
-      }
-  }
-`;
+    mutation editProduct($input: editProductInput!) {
+            editProduct(input: $input) {
+            id
+            title
+            description
+        }
+    }
+    `;
 
 const EditProducts = () => {
     const { id } = useParams();

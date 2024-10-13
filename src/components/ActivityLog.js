@@ -7,7 +7,7 @@ const GET_PRODUCTS_BY_TRANSACTION = gql`
   query GetProductsByTransaction($id: ID!, $type: String!, $action: String!){
     productsByTransaction(id: $id, type: $type, action: $action) {
       id
-      transactionType
+      """transactionType
       product {
         id
         title
@@ -16,7 +16,7 @@ const GET_PRODUCTS_BY_TRANSACTION = gql`
         rentPrice
         description
         datePosted
-      }
+      }}"""
     }
   }
 `;
