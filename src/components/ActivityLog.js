@@ -7,7 +7,15 @@ const GET_PRODUCTS_BY_TRANSACTION = gql`
   query GetProductsByTransaction($id: ID!, $type: String!, $action: String!){
     productsByTransaction(id: $id, type: $type, action: $action) {
       id
-      
+      title
+      isAvailable
+      categories
+      description
+      purchasePrice
+      rentPrice
+      datePosted
+      rentFrequency
+      userId
     }
   }
 `;
@@ -20,6 +28,8 @@ function ActivityLog() {
     const userId = localStorage.getItem("userId");
 
     const type = selectedOption === 'Sold' || selectedOption === 'Bought' ? 'SALE' : 'RENTAL';
+    
+    const options = [{ option: 'Bought' }, { option: 'Sold' }, { option: 'Borrowed' }, { option: 'Lent' }];
 
     const { loading, error, data } = useQuery(GET_PRODUCTS_BY_TRANSACTION, {
       variables: { id: parseInt(userId, 10), type, action: selectedOption },
@@ -43,22 +53,19 @@ function ActivityLog() {
       }
     }, [data]);
 
-    const handleOption = (title) => {
-        setSelectedOption(title);
+    const handleOption = (option) => {
+        setSelectedOption(option);
     }
-    const options = [{ title: 'Bought' }, { title: 'Sold' }, { title: 'Borrowed' }, { title: 'Lent' }];
+    
 
-    if (loadingAuth) {
-      return <p>Loading...</p>;
-    }
   return (
     <div className='container center' style={{minHeight: '300px', width: '60%'}}>
         <div className='flex justify-space-around'>
             {
               (
-                options.map((option, index) => (
-                  <div key={index} onClick={() => handleOption(option.title)} className='pointer pd-20' style={{flex: 1, textAlign: 'center', fontSize: '18px', borderBottom: selectedOption === option.title ? '2px solid blue' : 'none'}}>
-                    <p>{option.title}</p>
+                options.map((op, index) => (
+                  <div key={index} onClick={() => handleOption(op.option)} className='pointer pd-20' style={{flex: 1, textAlign: 'center', fontSize: '18px', borderBottom: selectedOption === op.option ? '2px solid blue' : 'none'}}>
+                    <p>{op.option}</p>
                   </div>
                 ))
               )
@@ -66,24 +73,24 @@ function ActivityLog() {
         </div>
 
         <div>
-          {loading && <p>Loading...</p>}
-          {error && <p>Error: {error.message}</p>}
-          {products.length > 0 ? ( // Check if products array has items
-          products.map(product => (
-            <ProductCard 
-              key={product.id}
-              id={product.id}
-              title={product.product.title}
-              categories={product.product.categories}
-              purchasePrice={product.product.purchasePrice}
-              rentPrice={product.product.rentPrice}
-              description={product.product.description}
-              datePosted={product.product.datePosted}
-            />
-          ))
-        ) : (
-          !loading && <p>No products available</p>
-        )}
+          {
+            products.length > 0 ? (
+              products.map(product => (
+                <ProductCard 
+                  key={product.id}
+                  id={product.id}
+                  title={product.title}
+                  categories={product.categories}
+                  purchasePrice={product.purchasePrice}
+                  rentPrice={product.rentPrice}
+                  description={product.description}
+                  datePosted={product.datePosted}
+                />
+              ))
+            ) : (
+              <p>No products available</p>
+            )
+          }
         </div>
 
     </div>

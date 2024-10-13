@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useQuery, gql } from '@apollo/client';
 import ProductCard from './ProductCard'
 import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const GET_ALL_PRODUCTS = gql`
     query {
@@ -38,7 +39,7 @@ const AllProducts = () => {
     navigate(`/product/${product.id}`, { state: { product } });
   };
 
-  const { data } = useQuery(GET_ALL_PRODUCTS);
+  const { data, loading } = useQuery(GET_ALL_PRODUCTS);
 
   useEffect(() => {
     if(data && data.products){
@@ -63,24 +64,31 @@ const AllProducts = () => {
           <div>
               <h3 style={{textAlign: 'center', margin: '30px 0', fontSize: '30px'}}>ALL PRODUCTS</h3>
 
-              {products && products.length > 0 ? 
-                products.map((product) => (
-                <ProductCard
-                    key = {product.id}
-                    id={product.id}
-                    userId={product.userId}
-                    title = {product.title}
-                    categories = {product.categories}
-                    purchasePrice = {product.purchasePrice}
-                    rentPrice = {product.rentPrice}
-                    description = {product.description}
-                    datePosted = {product.datePosted}
-                    isAvailable = {product.isAvailable}
-                    onClick={() => handleCardClick(product)} 
-                />
-              )) : (
-                    <p>No products available.</p>
-                )}
+              {
+                loading ? (
+                  <div className='flex align-center justify-center' style={{maxHeight: '100vh'}}>
+                    <CircularProgress />
+                  </div>
+                ) : (
+                products && products.length > 0 ? 
+                  products.map((product) => (
+                  <ProductCard
+                      key = {product.id}
+                      id={product.id}
+                      userId={product.userId}
+                      title = {product.title}
+                      categories = {product.categories}
+                      purchasePrice = {product.purchasePrice}
+                      rentPrice = {product.rentPrice}
+                      description = {product.description}
+                      datePosted = {product.datePosted}
+                      isAvailable = {product.isAvailable}
+                      onClick={() => handleCardClick(product)} 
+                  />
+                )) : (
+                  <p>No products available.</p>
+                )
+            )}
 
           </div>
         </div>

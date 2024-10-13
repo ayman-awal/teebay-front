@@ -63,6 +63,7 @@ function ProductDetails() {
 
     const handleTransaction = async (transactionType) => {
         try {
+            
             const { data, error } = await createTransaction({
                 variables: {
                     input: {
@@ -70,17 +71,21 @@ function ProductDetails() {
                         productId: parseInt(id, 10),
                         primaryUserId: parseInt(userId, 10),
                         secondaryUserId: parseInt(localStorage.getItem('userId'), 10),
-                        rentFrom: fromValue || null,
-                        rentTo: toValue || null
+                        rentFrom: transactionType !== 'RENTAL' ? null : fromValue,
+                        rentTo: transactionType !== 'RENTAL' ? null : toValue
                     }
                 }
 
             });
-            console.log("Successful: " + transactionType);
-            transactionType === 'RENTAL' ? setAlertMessage('Product successfully rented') : setAlertMessage('Product successfully bought');
+
+            const message = transactionType === 'RENTAL' ? 'Product successfully rented' : 'Product successfully bought';
+            setAlertMessage(message)
             setAlertSeverity('warning');
             setAlertOpen(true);
-            navigate('/');
+            
+            setTimeout(() => {
+                navigate('/');
+            }, 1500);
         } catch (error) {
             setAlertMessage(error.message);
             setAlertSeverity('warning');

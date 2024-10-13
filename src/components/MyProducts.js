@@ -4,6 +4,7 @@ import { useQuery, gql } from '@apollo/client';
 import ProductCard from './ProductCard'
 import Button from '@mui/material/Button';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const GET_PRODUCT_BY_USER_ID = gql`
     query productByUserId($id: ID!){
@@ -46,7 +47,7 @@ function MyProducts() {
         },
     });
 
-    const { data } = useQuery(GET_PRODUCT_BY_USER_ID, {variables: { id: userId }, fetchPolicy: 'cache-and-network'});
+    const { data, loading } = useQuery(GET_PRODUCT_BY_USER_ID, {variables: { id: userId }, fetchPolicy: 'cache-and-network'});
 
     useEffect(() => {
         if (data && data.productByUserId) {
@@ -85,23 +86,30 @@ function MyProducts() {
         <div className='container center'>
           <div>
               <h3 style={{textAlign: 'center', margin: '30px 0', fontSize: '30px'}}>MY PRODUCTS</h3>
-              {products && products.length > 0 ? 
-                products.map((product) => (
-                <ProductCard
-                    key = {product.id}
-                    id={product.id}
-                    title = {product.title}
-                    categories = {product.categories}
-                    purchasePrice = {product.purchasePrice}
-                    rentPrice = {product.rentPrice}
-                    rentFrequency = {product.rentFrequency}
-                    description = {product.description}
-                    datePosted = {product.datePosted}
-                    isAvailable = {product.isAvailable}
-                />
-              )) : (
-                    <p>No products available.</p>
-                )}
+                {
+                    loading ? (
+                        <div className='flex align-center justify-center'>
+                            <CircularProgress />
+                        </div>
+                    ) : (
+                        products && products.length > 0 ? 
+                            products.map((product) => (
+                            <ProductCard
+                                key = {product.id}
+                                id={product.id}
+                                title = {product.title}
+                                categories = {product.categories}
+                                purchasePrice = {product.purchasePrice}
+                                rentPrice = {product.rentPrice}
+                                rentFrequency = {product.rentFrequency}
+                                description = {product.description}
+                                datePosted = {product.datePosted}
+                                isAvailable = {product.isAvailable}
+                            />
+                        )) : (
+                            <p>No products available.</p>
+                        ))
+                }
 
             </div>
             <div className='center' style={{textAlign: 'center', margin: '30px 0'}}>
