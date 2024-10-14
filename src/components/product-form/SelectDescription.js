@@ -1,14 +1,24 @@
-import React from 'react';
+import React, { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
+import CustomAlert from "../CustomAlert";
 
 const SelectDescription = ({ nextStep, prevStep, values, handleChange }) => {
-  // const theme = createTheme();
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alertSeverity, setAlertSeverity] = useState("warning");
 
   const continueHandler = (e) => {
     e.preventDefault();
-    nextStep();
+    if(!values.description || String(values.description).trim() === ""){
+      setAlertMessage("Please enter description");
+      setAlertSeverity("warning");
+      setAlertOpen(true);
+    }
+    else{
+      nextStep();
+    }
   };
 
   return (
@@ -19,8 +29,6 @@ const SelectDescription = ({ nextStep, prevStep, values, handleChange }) => {
               Select Description
             </h2>
           <TextField
-            // placeholder="Enter Your First Name"
-            // label="First Name"
             onChange={handleChange('description')}
             defaultValue={values.description}
             multiline
@@ -39,14 +47,19 @@ const SelectDescription = ({ nextStep, prevStep, values, handleChange }) => {
             <Button
               color="primary"
               variant="contained"
-              onClick={nextStep}
+              onClick={continueHandler}
             >
               Continue
             </Button>
           </Box>
         </Box>
       </div>
-        
+      <CustomAlert
+        message={alertMessage}
+        open={alertOpen}
+        severity={alertSeverity}
+        onClose={() => setAlertOpen(false)}
+      />
     </div>
   );
 };
