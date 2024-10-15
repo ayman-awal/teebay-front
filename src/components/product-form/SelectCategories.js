@@ -7,7 +7,7 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import { MenuProps, getStyles } from "../../utils/SelectCompUtil";
+import { MenuProps, getStyles } from "../../utils/misc";
 import CustomAlert from "../CustomAlert";
 
 const SelectCategories = ({ nextStep, prevStep, values, handleChange }) => {

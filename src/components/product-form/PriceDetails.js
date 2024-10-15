@@ -8,10 +8,10 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import OutlinedInput from "@mui/material/OutlinedInput";
-import { MenuProps, getStyles } from "../../utils/SelectCompUtil";
+import { MenuProps, getStyles } from "../../utils/misc";
 import CustomAlert from "../CustomAlert";
 
-const RentDetails = ({ nextStep, prevStep, values, handleChange }) => {
+const PriceDetails = ({ nextStep, prevStep, values, handleChange }) => {
   const theme = useTheme();
   const [rentRate, setRentRate] = useState([]);
   const [alertOpen, setAlertOpen] = useState(false);
@@ -129,4 +129,4 @@ const RentDetails = ({ nextStep, prevStep, values, handleChange }) => {
   );
 };
 
-export default RentDetails;
+export default PriceDetails;

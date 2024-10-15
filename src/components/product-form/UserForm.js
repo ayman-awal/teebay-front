@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import SelectTitle from './SelectTitle';
 import SelectCategories from './SelectCategories';
-import RentDetails from './PriceDetails';
+import PriceDetails from './PriceDetails';
 import SelectDescription from './SelectDescription';
 import ProductSummary from './ProductSummary';
 
@@ -61,7 +61,7 @@ const UserForm = () => {
       );
     case 4:
       return (
-        <RentDetails
+        <PriceDetails
           nextStep={nextStep}
           prevStep={prevStep}
           handleChange={handleChange}

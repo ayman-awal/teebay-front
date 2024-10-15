@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { gql, useQuery} from '@apollo/client';
 import { useNavigate } from "react-router-dom";
 import ProductCard from './ProductCard';
+import NoProductsAvailable from './NoProductsAvailable';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const GET_PRODUCTS_BY_TRANSACTION = gql`
   query GetProductsByTransaction($id: ID!, $type: String!, $action: String!){
@@ -23,7 +25,6 @@ const GET_PRODUCTS_BY_TRANSACTION = gql`
 function ActivityLog() {
     const [selectedOption, setSelectedOption] = useState('Bought');
     const [products, setProducts] = useState([]);
-    const [loadingAuth, setLoadingAuth] = useState(true);
     const navigate = useNavigate();
     const userId = localStorage.getItem("userId");
 
@@ -40,8 +41,6 @@ function ActivityLog() {
       const user = localStorage.getItem('userId');
       if (!user) {
           navigate('/signin');
-      } else {
-        setLoadingAuth(false); 
       }
     }, [navigate]);
 
@@ -56,6 +55,11 @@ function ActivityLog() {
     const handleOption = (option) => {
         setSelectedOption(option);
     }
+
+    const handleCardClick = (product) => {
+      console.log('Clickedd');
+      navigate(`/product/${product.id}`, { state: { product } });
+    };
     
 
   return (
@@ -73,24 +77,32 @@ function ActivityLog() {
         </div>
 
         <div>
-          {
-            products.length > 0 ? (
-              products.map(product => (
-                <ProductCard 
-                  key={product.id}
-                  id={product.id}
-                  title={product.title}
-                  categories={product.categories}
-                  purchasePrice={product.purchasePrice}
-                  rentPrice={product.rentPrice}
-                  description={product.description}
-                  datePosted={product.datePosted}
-                />
-              ))
+          {loading ? 
+            (
+              <div className='flex align-center justify-center' style={{maxHeight: '100vh'}}>
+                <CircularProgress />
+              </div>
             ) : (
-              <p>No products available</p>
-            )
-          }
+              products.length > 0 ? (
+                products.map(product => (
+                  <ProductCard 
+                    key={product.id}
+                    id={product.id}
+                    title={product.title}
+                    categories={product.categories}
+                    purchasePrice={product.purchasePrice}
+                    rentPrice={product.rentPrice}
+                    rentFrequency={product.rentFrequency}
+                    description={product.description}
+                    datePosted={product.datePosted}
+                    onClick={() => handleCardClick(product)}
+                  />
+                ))
+              ) : (
+                <NoProductsAvailable />
+              )
+          )
+        }
         </div>
 
     </div>

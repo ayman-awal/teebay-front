@@ -9,7 +9,7 @@ import { useTheme } from "@mui/material/styles";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import Button from "@mui/material/Button";
 import CustomAlert from "./CustomAlert";
-import { MenuProps, getStyles } from "../utils/SelectCompUtil";
+import { MenuProps, getStyles } from "../utils/misc";
 
 const capitalizeFirstLetter = (string) => {
   return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
@@ -114,9 +114,11 @@ const EditProducts = () => {
         },
       });
       setAlertMessage("Product successfully updated");
-      setAlertSeverity("warning");
+      setAlertSeverity("success");
       setAlertOpen(true);
-      navigate("/my-products");
+      setTimeout(() => {
+        navigate("/my-products");
+      }, 1500);
     } catch (error) {
       setAlertMessage(error.message);
       setAlertSeverity("error");

@@ -8,6 +8,7 @@ import dayjs from 'dayjs';
 import RentModal from '../components/modals/RentModal';
 import BuyModal from '../components/modals/BuyModal';
 import CustomAlert from './CustomAlert';
+import { colorPalette } from '../utils/misc';
 
 const CREATE_TRANSACTION_MUTATION = gql`
     mutation createTransaction($input: createTransactionInput!) {
@@ -46,20 +47,16 @@ function ProductDetails() {
     const { product } = location.state;
     const { title, userId, categories, purchasePrice, description, datePosted, isAvailable } = product;
 
-    const theme = createTheme({
-        palette: {
-            primary: {
-                main: '#ae34eb',
-            },
-            secondary: {
-                main: '#FF5733'
-            }
-        },
-    });
+    const theme = createTheme(colorPalette);
 
     const navigateProduct = () => {
         navigate('/my-products');
     }
+
+    console.log("userId === loggedInUser: " + userId === loggedInUser);
+    console.log("loggedInUser: " + loggedInUser);
+    console.log("userId: " + userId);
+    console.log("isAvailable: " + isAvailable);
 
     const handleTransaction = async (transactionType) => {
         try {
@@ -80,7 +77,7 @@ function ProductDetails() {
 
             const message = transactionType === 'RENTAL' ? 'Product successfully rented' : 'Product successfully bought';
             setAlertMessage(message)
-            setAlertSeverity('warning');
+            setAlertSeverity('success');
             setAlertOpen(true);
             
             setTimeout(() => {
@@ -88,10 +85,9 @@ function ProductDetails() {
             }, 1500);
         } catch (error) {
             setAlertMessage(error.message);
-            setAlertSeverity('warning');
+            setAlertSeverity('error');
             setAlertOpen(true);
         }
-        closeRentModal();
     };
 
     return (
@@ -106,26 +102,27 @@ function ProductDetails() {
                         <p className='product-detail-text'>Price: ${purchasePrice}</p>
                         <p className='product-description'>{description}</p>
                     </div>
+                    
+
                     {
-                        !isAvailable ? (
+                        userId === loggedInUser ? (
+                            <div className='flex justify-end'>
+                                <Button variant="outlined" onClick={navigateProduct}>My Products</Button>
+                            </div>
+                        ) : !isAvailable ? (
                             <div className='flex gap-20 justify-end'>
                                 <p className='product-detail-text'>Product currently unavailable</p>
                             </div>
                         ) : (
-                            userId !== loggedInUser ? (
-                                <div className='flex gap-20 justify-end'>
-                                    <ThemeProvider theme={theme}>
-                                        <Button variant="contained" disableElevation onClick={rentModal}>Rent</Button>
-                                        <Button variant="contained" disableElevation onClick={buyModal}>Buy</Button>
-                                    </ThemeProvider>
-                                </div>
-                            ) : (
-                                <div className='flex justify-end'>
-                                    <Button variant="outlined" onClick={navigateProduct}>My Products</Button>
-                                </div>
-                            )
+                            <div className='flex gap-20 justify-end'>
+                                <ThemeProvider theme={theme}>
+                                    <Button variant="contained" disableElevation onClick={rentModal}>Rent</Button>
+                                    <Button variant="contained" disableElevation onClick={buyModal}>Buy</Button>
+                                </ThemeProvider>
+                            </div>
                         )
                     }
+
                 </div>
                 
                 <RentModal 

@@ -19,4 +19,15 @@ function getStyles(element, state, theme) {
   };
 }
 
-export { MenuProps, getStyles };
+const colorPalette = {
+  palette: {
+    primary: {
+      main: "#ae34eb",
+    },
+    secondary: {
+      main: "#FF5733",
+    },
+  },
+}
+
+export { MenuProps, getStyles, colorPalette };

@@ -5,6 +5,9 @@ import ProductCard from './ProductCard'
 import Button from '@mui/material/Button';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CircularProgress from '@mui/material/CircularProgress';
+import NoProductsAvailable from './NoProductsAvailable';
+import { colorPalette } from '../utils/misc';
+
 
 const GET_PRODUCT_BY_USER_ID = gql`
     query productByUserId($id: ID!){
@@ -18,6 +21,7 @@ const GET_PRODUCT_BY_USER_ID = gql`
             datePosted
             rentFrequency
             isAvailable
+            userId
         }
     }
 `;
@@ -25,39 +29,26 @@ const GET_PRODUCT_BY_USER_ID = gql`
 function MyProducts() {
     const navigate = useNavigate();
     const userId = localStorage.getItem('userId');
-    const [loadingAuth, setLoadingAuth] = useState(true);
     const [products, setProducts] = useState([]);
 
     useEffect(() => {
         if(!userId){
             navigate('/signin');
-        } else {
-            setLoadingAuth(false); 
-        }
-    }, [navigate]);
+        } 
+    }, [navigate, userId]);
 
-    const theme = createTheme({
-        palette: {
-          primary: {
-            main: '#FF5733',
-            },
-          secondary: {
-            main: '#ae34eb',
-          }
-        },
+    const theme = createTheme(colorPalette);
+
+    const { data, loading } = useQuery(GET_PRODUCT_BY_USER_ID, {
+        variables: { id: userId }, 
+        fetchPolicy: "cache-and-network"
     });
-
-    const { data, loading } = useQuery(GET_PRODUCT_BY_USER_ID, {variables: { id: userId }, fetchPolicy: 'cache-and-network'});
 
     useEffect(() => {
         if (data && data.productByUserId) {
             setProducts(data.productByUserId);
         }
     }, [data]);
-
-    if (loadingAuth) {
-        return <p>Loading...</p>;
-      }
     
     const handleLogout = () => {
         localStorage.removeItem('userId');
@@ -71,9 +62,12 @@ function MyProducts() {
     }
 
     const handleAddProduct = () => {
-        console.log('clickedddd');
         navigate('/add-product');
     }
+
+    const handleCardClick = (product) => {
+        navigate(`/product/${product.id}`, { state: { product } });
+    };
 
   return (
     <div>
@@ -105,9 +99,10 @@ function MyProducts() {
                                 description = {product.description}
                                 datePosted = {product.datePosted}
                                 isAvailable = {product.isAvailable}
+                                onClick={() => handleCardClick(product)} 
                             />
                         )) : (
-                            <p>No products available.</p>
+                            <NoProductsAvailable height={'25vh'} />
                         ))
                 }
 
@@ -123,4 +118,5 @@ function MyProducts() {
   )
 }
 
-export default MyProducts
+export default MyProducts;
+export { GET_PRODUCT_BY_USER_ID };

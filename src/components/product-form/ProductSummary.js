@@ -20,7 +20,34 @@ const CREATE_PRODUCT = gql`
 
 const ProductSummary = ({ prevStep, values }) => {
   const navigate = useNavigate();
-  const [createProduct] = useMutation(CREATE_PRODUCT);
+  const [createProduct] = useMutation(CREATE_PRODUCT, {
+    update(cache, { data: { createProduct } }) {
+      cache.modify({
+        fields: {
+          productByUserId(existingProducts = []) {
+            const newProductRef = cache.writeFragment({
+              data: createProduct,
+              fragment: gql`
+                fragment NewProduct on Product {
+                  id
+                  title
+                  categories
+                  description
+                  purchasePrice
+                  rentPrice
+                  rentFrequency
+                  isAvailable
+                  datePosted
+                }
+              `
+            });
+            
+            return [...existingProducts, newProductRef];
+          }
+        }
+      })
+    }
+  });
   const {
     title: [title],
     categories,
@@ -35,11 +62,11 @@ const ProductSummary = ({ prevStep, values }) => {
     const input = {
       title, 
       isAvailable: true,
-      categories: categories.join(', ').toUpperCase(),
+      categories: categories.join(', '),
       description: description.join(' '), 
       purchasePrice,
       rentPrice,
-      rentFrequency: rentFrequency.toUpperCase().replace(/ /g, '_'),
+      rentFrequency: rentFrequency,
       datePosted: new Date(),
       userId: Number(localStorage.getItem('userId'))
     };

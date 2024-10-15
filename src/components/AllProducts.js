@@ -4,6 +4,7 @@ import { useQuery, gql } from '@apollo/client';
 import ProductCard from './ProductCard'
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
+import NoProductsAvailable from './NoProductsAvailable';
 
 const GET_ALL_PRODUCTS = gql`
     query {
@@ -17,6 +18,7 @@ const GET_ALL_PRODUCTS = gql`
             datePosted
             userId
             isAvailable
+            rentFrequency
         }
     }
 `;
@@ -39,7 +41,7 @@ const AllProducts = () => {
     navigate(`/product/${product.id}`, { state: { product } });
   };
 
-  const { data, loading } = useQuery(GET_ALL_PRODUCTS);
+  const { data, loading } = useQuery(GET_ALL_PRODUCTS, {fetchPolicy: "cache-and-network"});
 
   useEffect(() => {
     if(data && data.products){
@@ -80,13 +82,14 @@ const AllProducts = () => {
                       categories = {product.categories}
                       purchasePrice = {product.purchasePrice}
                       rentPrice = {product.rentPrice}
+                      rentFrequency = {product.rentFrequency}
                       description = {product.description}
                       datePosted = {product.datePosted}
                       isAvailable = {product.isAvailable}
                       onClick={() => handleCardClick(product)} 
                   />
                 )) : (
-                  <p>No products available.</p>
+                  <NoProductsAvailable height={'60vh'}/>
                 )
             )}
 
